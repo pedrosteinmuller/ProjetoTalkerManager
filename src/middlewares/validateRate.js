@@ -5,6 +5,7 @@ const validateRate = (request, response, next) => {
   if (!rate) {
     return response.status(400).json({ message: 'O campo "rate" é obrigatório' });
   }
+
   if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
     return response
       .status(400)
