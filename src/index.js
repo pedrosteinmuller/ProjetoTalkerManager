@@ -63,7 +63,8 @@ app.post(
     talkers.push(newTalker);
     await fs.writeFile(TALKERS_FILE_DATA, talkers);
     return response.status(HTTP_CREATED_STATUS).json(newTalker);
-  });
+  },
+);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
