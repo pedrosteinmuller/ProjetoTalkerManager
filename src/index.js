@@ -1,6 +1,6 @@
 const express = require('express');
-const fs = require('./utils/fsdata');
 const path = require('path');
+const fs = require('./utils/fsdata');
 
 const app = express();
 app.use(express.json());
@@ -12,7 +12,7 @@ const TALKERS_FILE_DATA = path.resolve(__dirname, './talker.json');
 
 app.get('/talker', async (_request, response) => {
   const talkers = await fs.readFile(TALKERS_FILE_DATA);
-  if(talkers.length === 0){
+  if (talkers.length === 0) {
     return response.status(HTTP_OK_STATUS).send([]);
   }
   return response.status(HTTP_OK_STATUS).send(talkers);
