@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const crypto = require('crypto');
 const fs = require('./utils/fsdata');
 
 const app = express();
@@ -10,6 +11,8 @@ const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
 
 const TALKERS_FILE_DATA = path.resolve(__dirname, './talker.json');
+
+const generateToken = () => crypto.randomBytes(8).toString('hex');
 
 app.get('/talker', async (_request, response) => {
   const talkers = await fs.readFile(TALKERS_FILE_DATA);
@@ -29,6 +32,10 @@ app.get('/talker/:id', async (request, response) => {
       .send({ message: 'Pessoa palestrante não encontrada' });
   }
   return response.status(HTTP_OK_STATUS).send(talkerId);
+});
+
+app.post('/login', (request, response) => {
+  response.status(HTTP_OK_STATUS).json({ token: generateToken() });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
