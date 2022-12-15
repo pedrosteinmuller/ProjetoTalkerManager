@@ -1,5 +1,4 @@
 const validateName = (request, response, next) => {
-  console.log('teste');
   const { name } = request.body;
   if (!name || name === '') {
     return response.status(400).json({ message: 'O campo "name" é obrigatório' });

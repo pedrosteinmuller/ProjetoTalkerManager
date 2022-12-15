@@ -89,6 +89,14 @@ app.put(
   },
 );
 
+app.delete('/talker/:id', auth, async (request, response) => {
+  const { id } = request.params;
+  const talkers = await fs.readFile(TALKERS_FILE_DATA);
+  const deleteTalkers = talkers.filter((talker) => talker.id !== Number(id));
+  await fs.writeFile(TALKERS_FILE_DATA, deleteTalkers);
+  response.status(204).json();
+});
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
