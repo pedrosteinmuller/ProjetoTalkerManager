@@ -25,12 +25,27 @@ const TALKERS_FILE_DATA = path.resolve(__dirname, './talker.json');
 
 const generateToken = () => crypto.randomBytes(8).toString('hex');
 
+// não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (_request, response) => {
+  response.status(HTTP_OK_STATUS).send();
+});
+
 app.get('/talker', async (_request, response) => {
   const talkers = await fs.readFile(TALKERS_FILE_DATA);
   if (talkers.length === 0) {
     return response.status(HTTP_OK_STATUS).send([]);
   }
   return response.status(HTTP_OK_STATUS).send(talkers);
+});
+
+app.get('/talker/search', auth, async (request, response) => {
+  const { q } = request.query;
+  const talkers = await fs.readFile(TALKERS_FILE_DATA);
+  const getTalkers = talkers.filter((talker) => talker.name.includes(q));
+  if (!q) {
+    return response.status(200).json(talkers);
+  } 
+  return response.status(200).json(getTalkers);
 });
 
 app.get('/talker/:id', async (request, response) => {
@@ -95,11 +110,6 @@ app.delete('/talker/:id', auth, async (request, response) => {
   const deleteTalkers = talkers.filter((talker) => talker.id !== Number(id));
   await fs.writeFile(TALKERS_FILE_DATA, deleteTalkers);
   response.status(204).json();
-});
-
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
 });
 
 app.listen(PORT, () => {
